@@ -13,7 +13,7 @@
 
 ## 설치 방법
 
-1. GitHub 저장소의 Releases (https://github.com/SKARCH218/mmo_plugin/releases) 페이지로 이동합니다.
+1. GitHub 저장소의 [Releases](https://github.com/SKARCH218/mmo_plugin/releases) 페이지로 이동합니다.
 2. 최신 버전의 .jar 파일을 다운로드합니다.
 3. 서버의 plugins 폴더에 다운로드한 파일을 추가합니다.
 4. 서버를 재시작하거나 /reload 명령어를 사용하여 플러그인을 활성화합니다.
