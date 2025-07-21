@@ -20,7 +20,7 @@
 
 ## 프로젝트 구조
 
-.
+```
 ├── build.gradle.kts
 ├── settings.gradle.kts
 ├── gradlew
@@ -33,7 +33,7 @@
     └── main
         ├── kotlin
         └── resources
-
+```
 ## 라이선스
 
 이 프로젝트의 라이선스는 별도로 지정되어 있지 않습니다.
