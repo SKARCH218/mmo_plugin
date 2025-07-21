@@ -1,0 +1,12 @@
+name: LightMMO
+version: '1.0-SNAPSHOT'
+main: lightstudio.mmo_plugin.LightMmo
+api-version: '1.21'
+commands:
+  mmo:
+    description: Shows your skill information.
+    usage: /mmo
+  mmoadmin:
+    description: Admin commands for LightMMO.
+    usage: /mmoadmin <args>
+    permission: lightmmo.admin

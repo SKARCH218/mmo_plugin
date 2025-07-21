@@ -1,0 +1,165 @@
+# LightMMO 플러그인 설정 파일
+# 이 파일은 플러그인의 다양한 기능을 설정합니다.
+
+
+
+# GUI (그래픽 사용자 인터페이스) 설정
+gui:
+  # GUI 창의 제목입니다. 색상 코드를 사용할 수 있습니다.
+  title: "&8나의 스킬"
+  # GUI 창의 크기입니다. 9의 배수 (9, 18, 27, 36, 45, 54)로 설정해야 합니다.
+  size: 9
+
+  # 이 값이 true이면, 모든 GUI 아이템의 재료가 STRUCTURE_VOID로 대체됩니다.  # 투명한 STRUCTURE_VOID 텍스처를 가진 커스텀 리소스 팩을 사용하는 경우에 유용합니다.  # 이를 통해 GUI 디자인의 자유도를 높일 수 있습니다.  items-all-structure-void: false
+
+  # 각 스킬 아이템의 설정입니다.
+  items:
+    mining:
+      # 아이템의 재료입니다. Minecraft Material 이름을 사용합니다. (예: DIAMOND_PICKAXE)
+      material: DIAMOND_PICKAXE
+      # 아이템의 표시 이름입니다. 색상 코드를 사용할 수 있습니다.
+      display_name: "&b채광 스킬"
+      # 아이템의 설명(Lore)입니다. 각 줄은 리스트로 추가합니다.
+      # {level}, {exp}, {required_exp} 플레이스홀더를 사용할 수 있습니다.
+      lore:
+        - "&7레벨: &f{level}"
+        - "&7경험치: &f{exp} / {required_exp}"
+        - "&7다음 레벨까지: &f{remaining_exp}"
+      # GUI 내 아이템의 슬롯 위치입니다. 0부터 시작합니다.
+      slot: 2
+
+    farming:
+      material: DIAMOND_HOE
+      display_name: "&a농사 스킬"
+      lore:
+        - "&7레벨: &f{level}"
+        - "&7경험치: &f{exp} / {required_exp}"
+        - "&7다음 레벨까지: &f{remaining_exp}"
+      slot: 3
+
+    fishing:
+      material: FISHING_ROD
+      display_name: "&9낚시 스킬"
+      lore:
+        - "&7레벨: &f{level}"
+        - "&7경험치: &f{exp} / {required_exp}"
+        - "&7다음 레벨까지: &f{remaining_exp}"
+      slot: 4
+
+    hunting:
+      material: BOW
+      display_name: "&c사냥 스킬"
+      lore:
+        - "&7레벨: &f{level}"
+        - "&7경험치: &f{exp} / {required_exp}"
+        - "&7다음 레벨까지: &f{remaining_exp}"
+      slot: 5
+
+    gathering:
+      material: OAK_LEAVES
+      display_name: "&2채집 스킬"
+      lore:
+        - "&7레벨: &f{level}"
+        - "&7경험치: &f{exp} / {required_exp}"
+        - "&7다음 레벨까지: &f{remaining_exp}"
+      slot: 6
+
+# 경험치 획득 설정
+exp_gain:
+  # 채광 스킬 경험치 설정
+  mining:
+    # 특정 블록 파괴 시 얻는 경험치입니다. Material 이름을 사용합니다.
+    block_break:
+      STONE: 5
+      COAL_ORE: 10
+      IRON_ORE: 15
+      GOLD_ORE: 20
+      DIAMOND_ORE: 50
+      EMERALD_ORE: 60
+      DEEPSLATE_COAL_ORE: 10
+      DEEPSLATE_IRON_ORE: 20
+      DEEPSLATE_GOLD_ORE: 25
+      DEEPSLATE_DIAMOND_ORE: 55
+      DEEPSLATE_EMERALD_ORE: 65
+      NETHER_QUARTZ_ORE: 15
+      NETHER_GOLD_ORE: 20
+      ANCIENT_DEBRIS: 100
+  # 농사 스킬 경험치 설정
+  farming:
+    # 특정 작물 수확 시 얻는 경험치입니다. Material 이름을 사용합니다.
+    crop_harvest:
+      WHEAT: 7
+      CARROTS: 8
+      POTATOES: 8
+      BEETROOTS: 9
+      PUMPKIN: 10
+      MELON: 10
+      SUGAR_CANE: 5
+      CACTUS: 5
+      BAMBOO: 5
+      COCOA_BEANS: 7
+    # 씨앗 심기 시 얻는 경험치입니다. Material 이름을 사용합니다.
+    plant_seed:
+      WHEAT_SEEDS: 2
+      CARROT: 2
+      POTATO: 2
+      BEETROOT_SEEDS: 2
+    # 밭 갈기 시 얻는 경험치입니다.
+    till_land: 3
+    # 동물 번식 시 얻는 경험치입니다. EntityType 이름을 사용합니다.
+    breed_animal:
+      COW: 10
+      PIG: 10
+      SHEEP: 10
+      CHICKEN: 8
+      RABBIT: 8
+  # 낚시 스킬 경험치 설정
+  fishing:
+    # 물고기 낚시 성공 시 얻는 기본 경험치입니다.
+    catch: 15
+    # 보물 낚시 성공 시 얻는 경험치입니다.
+    catch_treasure: 30
+    # 쓰레기 낚시 성공 시 얻는 경험치입니다.
+    catch_junk: 5
+  # 사냥 스킬 경험치 설정
+  hunting:
+    # 특정 엔티티 처치 시 얻는 경험치입니다. EntityType 이름을 사용합니다.
+    entity_kill:
+      ZOMBIE: 20
+      SKELETON: 25
+      SPIDER: 20
+      CREEPER: 30
+      ENDERMAN: 40
+      BLAZE: 35
+      GHAST: 50
+      WITHER_SKELETON: 30
+      PIGLIN: 25
+      HOGLIN: 25
+      STRIDER: 15
+      COW: 10
+      PIG: 10
+      SHEEP: 10
+      CHICKEN: 8
+      RABBIT: 8
+  # 채집 스킬 경험치 설정
+  gathering:
+    # 특정 블록 파괴 시 얻는 경험치입니다. Material 이름을 사용합니다.
+    block_break:
+      TALL_GRASS: 3
+      GRASS_BLOCK: 3
+      OAK_LEAVES: 5
+      BIRCH_LEAVES: 5
+      SPRUCE_LEAVES: 5
+      JUNGLE_LEAVES: 5
+      ACACIA_LEAVES: 5
+      DARK_OAK_LEAVES: 5
+      OAK_LOG: 10
+      BIRCH_LOG: 10
+      SPRUCE_LOG: 10
+      JUNGLE_LOG: 10
+      ACACIA_LOG: 10
+      DARK_OAK_LOG: 10
+      STONE: 2 # 돌 채집 경험치 (채광과 별개)
+      DIRT: 2
+      GRAVEL: 2
+      SAND: 2
