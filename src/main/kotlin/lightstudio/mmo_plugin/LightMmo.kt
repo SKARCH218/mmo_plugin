@@ -25,6 +25,7 @@ class LightMmo : JavaPlugin() {
         private set
     lateinit var langConfig: FileConfiguration
         private set
+    private var placeholderAPIExpansion: lightstudio.mmo_plugin.expansion.PlaceholderAPIExpansion? = null
 
     override fun onEnable() {
         try {
@@ -55,7 +56,8 @@ class LightMmo : JavaPlugin() {
 
             // Register PlaceholderAPI Expansion
             if (server.pluginManager.getPlugin("PlaceholderAPI") != null) {
-                lightstudio.mmo_plugin.expansion.PlaceholderAPIExpansion(this).register()
+                placeholderAPIExpansion = lightstudio.mmo_plugin.expansion.PlaceholderAPIExpansion(this)
+                placeholderAPIExpansion?.register()
                 logger.info("PlaceholderAPI expansion registered.")
             } else {
                 logger.warning("PlaceholderAPI not found. Placeholder expansion will not be registered.")
@@ -88,12 +90,14 @@ class LightMmo : JavaPlugin() {
             if (::database.isInitialized) database.disconnect()
             if (::skillCache.isInitialized) skillCache.invalidateAll()
 
-            unregisterListeners()
-            unregisterCommands()
+            // Unregister PlaceholderAPI Expansion
+            placeholderAPIExpansion?.unregister()
 
-            logger.info("LightMMO plugin disabled.")
+            unregisterListeners()
+
+            logger.info("LightMmo plugin disabled.")
         } catch (e: Exception) {
-            logger.severe("Error disabling LightMMO plugin: " + e.message)
+            logger.severe("Error disabling LightMmo plugin: " + e.message)
             e.printStackTrace()
         }
     }
@@ -102,26 +106,13 @@ class LightMmo : JavaPlugin() {
         HandlerList.unregisterAll(this)
     }
 
-    private fun unregisterCommands() {
-        val commandMapField = server.javaClass.getDeclaredField("commandMap")
-        commandMapField.isAccessible = true
-        val commandMap = commandMapField.get(server) as CommandMap
-
-        val knownCommandsField = SimpleCommandMap::class.java.getDeclaredField("knownCommands")
-        knownCommandsField.isAccessible = true
-        val knownCommands = knownCommandsField.get(commandMap) as MutableMap<String, Command>
-
-        listOf("mmo", "mmoadmin").forEach { cmd ->
-            knownCommands.remove(cmd)
-            knownCommands.remove("lightmmo:$cmd") // Remove plugin-specific alias
-        }
-    }
-
     fun reloadPluginConfig() {
         try {
             // Unregister existing listeners and commands
             unregisterListeners()
-            unregisterCommands()
+
+            // Unregister PlaceholderAPI Expansion
+            placeholderAPIExpansion?.unregister()
 
             // Reload config files
             reloadConfig()
@@ -135,6 +126,15 @@ class LightMmo : JavaPlugin() {
             // Re-register listeners and commands
             registerListeners()
             registerCommands()
+
+            // Re-register PlaceholderAPI Expansion
+            if (server.pluginManager.getPlugin("PlaceholderAPI") != null) {
+                placeholderAPIExpansion = lightstudio.mmo_plugin.expansion.PlaceholderAPIExpansion(this)
+                placeholderAPIExpansion?.register()
+                logger.info("PlaceholderAPI expansion re-registered.")
+            } else {
+                logger.warning("PlaceholderAPI not found. Placeholder expansion will not be re-registered.")
+            }
 
             logger.info("LightMMO plugin configuration reloaded.")
         } catch (e: Exception) {

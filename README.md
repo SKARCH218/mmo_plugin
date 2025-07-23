@@ -1,39 +1,52 @@
-# LightMMO
+# LightMMO 플러그인
 
-### 이 플러그인은 마인크래프트 서버에 생활형 스탯을 추가해주는 플러그인입니다. Kotlin으로 작성되었으며 Gradle을 사용하여 빌드되었습니다.
+LightMMO는 코틀린으로 개발된 마인크래프트 플러그인으로, 서버에 포괄적인 스킬 시스템을 도입합니다. 플레이어는 다양한 스킬에서 경험치를 얻고, 레벨을 올리며, 진행 상황을 추적할 수 있습니다.
 
-## 주요 기능
+## 기능
 
-* 생활 스탯 추가: 게임 내에 다양한 생활 관련 스탯을 추가하여 플레이어에게 새로운 재미를 선사합니다.
+*   **스킬 시스템:** 플레이어는 다양한 스킬에서 경험치를 얻고 레벨을 올릴 수 있습니다.
+*   **플레이어 데이터 관리:** 플레이어 스킬 데이터를 효율적으로 저장하고 로드합니다.
+*   **인게임 명령어:**
+    *   `/mmo`: 현재 스킬 정보와 경험치를 확인합니다.
+    *   `/mmoadmin <args>`: 플레이어 스킬 관리를 위한 관리자 명령어 ( `lightmmo.admin` 권한 필요).
+*   **PlaceholderAPI 연동:** PlaceholderAPI를 지원하는 채팅, 스코어보드 또는 다른 플러그인에서 플레이어 스킬 정보를 직접 표시할 수 있습니다.
 
-## 요구 사항
+## PlaceholderAPI 플레이스홀더
 
-* 언어: Kotlin
-* 빌드 도구: Gradle
+LightMMO는 PlaceholderAPI와 함께 사용할 수 있는 다음 플레이스홀더를 제공합니다:
 
-## 설치 방법
+*   `%lightmmo_<skill_type>_level%`: 특정 스킬의 현재 레벨을 표시합니다.
+    *   예시: `%lightmmo_FISHING_level%`은 플레이어의 낚시 스킬 레벨을 보여줍니다.
+*   `%lightmmo_<skill_type>_exp%`: 특정 스킬의 현재 경험치 포인트를 표시합니다.
+    *   예시: `%lightmmo_MINING_exp%`은 플레이어의 채광 스킬 경험치를 보여줍니다.
 
-1. GitHub 저장소의 [Releases](https://github.com/SKARCH218/mmo_plugin/releases) 페이지로 이동합니다.
-2. 최신 버전의 .jar 파일을 다운로드합니다.
-3. 서버의 plugins 폴더에 다운로드한 파일을 추가합니다.
-4. 서버를 재시작하거나 /reload 명령어를 사용하여 플러그인을 활성화합니다.
+`<skill_type>`을 사용 가능한 스킬 유형 중 하나로 대체하십시오 (예: `FISHING`, `MINING`, `HUNTING`, `GATHERING`, `FARMING`, `BLOCKBREAK`).
 
-## 프로젝트 구조
+## 설치
 
+1.  [릴리스/다운로드 링크 - *사용자가 추가해야 함*]에서 플러그인의 최신 버전을 다운로드합니다.
+2.  `LightMMO.jar` 파일을 서버의 `plugins` 폴더에 넣습니다.
+3.  서버를 재시작하거나 리로드합니다.
+4.  (선택 사항) PlaceholderAPI 플레이스홀더를 사용하려면 서버에 PlaceholderAPI가 설치되어 있는지 확인하십시오.
+
+## 설정
+
+첫 실행 후 `plugins/LightMMO` 폴더에 설정 파일 (`config.yml`, `exp.yml`, `lang.yml`)이 생성됩니다. 경험치 획득률, 스킬 상한선, 언어 메시지 등 플러그인의 다양한 측면을 사용자 정의할 수 있습니다.
+
+## 개발
+
+이 플러그인은 코틀린과 Gradle을 사용하여 개발되었습니다.
+
+### 소스에서 빌드하기
+
+소스에서 플러그인을 빌드하려면 프로젝트 루트 디렉터리로 이동하여 다음 명령어를 실행하십시오:
+
+```bash
+./gradlew build
 ```
-├── build.gradle.kts
-├── settings.gradle.kts
-├── gradlew
-├── gradlew.bat
-├── gradle
-│   └── wrapper
-│       ├── gradle-wrapper.jar
-│       └── gradle-wrapper.properties
-└── src
-    └── main
-        ├── kotlin
-        └── resources
-```
-## 라이선스
 
-이 프로젝트의 라이선스는 별도로 지정되어 있지 않습니다.
+컴파일된 `.jar` 파일은 `build/libs/` 디렉터리에 있습니다.
+
+## 지원
+
+지원, 버그 보고 또는 기능 요청은 [지원/이슈 트래커 링크 - *사용자가 추가해야 함*]를 방문하십시오.
