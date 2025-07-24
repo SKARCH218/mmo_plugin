@@ -25,6 +25,8 @@ class LightMmo : JavaPlugin() {
         private set
     lateinit var langConfig: FileConfiguration
         private set
+    lateinit var expConfig: FileConfiguration
+        private set
     private var placeholderAPIExpansion: lightstudio.mmo_plugin.expansion.PlaceholderAPIExpansion? = null
 
     override fun onEnable() {
@@ -32,7 +34,7 @@ class LightMmo : JavaPlugin() {
             // Configuration files
             saveDefaultConfig()
             loadLanguageConfig()
-            saveResource("exp.yml", false)
+            loadExpConfig()
 
             // Database
             database = Database(this)
@@ -43,7 +45,8 @@ class LightMmo : JavaPlugin() {
             skillCache = SkillCache(this)
 
             // Skill Manager
-            skillManager = SkillManager(this)
+            val maxLevel = config.getInt("max_level", 0) // 0 means infinite
+            skillManager = SkillManager(this, maxLevel, expConfig)
 
             // Skill GUI
             skillGui = lightstudio.mmo_plugin.gui.SkillGui(this)
@@ -74,15 +77,8 @@ class LightMmo : JavaPlugin() {
         try {
             logger.info("Saving all online player data before disabling...")
             val saveFutures = server.onlinePlayers.map { player ->
-                skillManager.saveAllPlayerSkills(player.uniqueId.toString())
-                    .exceptionally { ex ->
-                        logger.severe("Error saving skill data for player ${player.name} during shutdown: ${ex.message}")
-                        ex.printStackTrace()
-                        null
-                    }
+                skillManager.saveAllPlayerSkills(player.uniqueId.toString()).join()
             }
-            // Wait for all save operations to complete (with a timeout to prevent indefinite hang)
-            CompletableFuture.allOf(*saveFutures.toTypedArray()).get(30, TimeUnit.SECONDS)
             logger.info("All online player data saved.")
 
             // Plugin shutdown logic
@@ -118,7 +114,11 @@ class LightMmo : JavaPlugin() {
             reloadConfig()
             saveDefaultConfig()
             loadLanguageConfig()
-            saveResource("exp.yml", false)
+            loadExpConfig()
+
+            // Re-initialize Skill Manager with new config values
+            val maxLevel = config.getInt("max_level", 0)
+            skillManager = SkillManager(this, maxLevel, expConfig)
 
             // Invalidate cache
             if (::skillCache.isInitialized) skillCache.invalidateAll()
@@ -177,6 +177,16 @@ class LightMmo : JavaPlugin() {
             } else if (langFile.length() == 0L) {
                 logger.severe("Language file '$langFileName' exists but is empty: ${langFile.absolutePath}")
             }
+        }
+    }
+
+    private fun loadExpConfig() {
+        val expFileName = "exp.yml"
+        val expFile = File(dataFolder, expFileName)
+        saveResource(expFileName, false)
+        expConfig = YamlConfiguration.loadConfiguration(expFile)
+        if (expConfig.getKeys(false).isEmpty()) {
+            logger.warning("Experience file '$expFileName' is empty or could not be loaded. Please check your experience file configuration.")
         }
     }
 }

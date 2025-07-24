@@ -41,7 +41,7 @@ class MmoCommand(private val plugin: LightMmo) : CommandExecutor, TabCompleter {
                                 statement.executeQuery().use { resultSet ->
                                     while (resultSet.next()) {
                                         val uuid = resultSet.getString("uuid")
-                                        val level = resultSet.getInt("skill_${skill.name.lowercase()}_level")
+                                        val level = resultSet.getInt("skill_${skill.name .lowercase()}_level")
                                         topPlayers.add(Pair(uuid, level))
                                     }
                                 }

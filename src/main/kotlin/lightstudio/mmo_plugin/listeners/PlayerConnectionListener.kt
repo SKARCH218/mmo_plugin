@@ -24,12 +24,12 @@ class PlayerConnectionListener(private val plugin: LightMmo) : Listener {
     fun onPlayerQuit(event: PlayerQuitEvent) {
         val player = event.player
         // 플레이어 종료 시 모든 스킬 데이터를 DB에 저장하고 캐시에서 제거
-        plugin.skillManager.saveAllPlayerSkills(player.uniqueId.toString())
-            .thenRun { plugin.logger.info("Player ${player.name} skill data saved and removed from cache.") }
-            .exceptionally { ex ->
-                plugin.logger.severe("Error saving skill data for player ${player.name}: ${ex.message}")
-                ex.printStackTrace()
-                null
-            }
+        try {
+            plugin.skillManager.saveAllPlayerSkills(player.uniqueId.toString()).join() // 동기적으로 완료될 때까지 대기
+            plugin.logger.info("Player ${player.name} skill data saved and removed from cache.")
+        } catch (ex: Exception) {
+            plugin.logger.severe("Error saving skill data for player ${player.name}: ${ex.message}")
+            ex.printStackTrace()
+        }
     }
 }

@@ -1,34 +1,58 @@
+# ===================================================================
 # LightMMO 플러그인 설정 파일
-# 이 파일은 플러그인의 다양한 기능을 설정합니다.
+# ===================================================================
+# 이 파일에서 플러그인의 모든 기능을 설정할 수 있습니다.
+# YAML 형식에 주의하여 수정해주세요. (들여쓰기, 띄어쓰기 등)
+# 잘못된 형식은 오류를 발생시킬 수 있습니다.
+# ===================================================================
 
+# ===================================================================
+# 스킬 레벨 설정
+# ===================================================================
+# 스킬의 최대 레벨을 설정합니다. 0으로 설정하면 무한대입니다.
+max_level: 20
 
-
+# ===================================================================
 # GUI (그래픽 사용자 인터페이스) 설정
+# /mmo 명령어를 입력했을 때 표시되는 스킬 창을 설정합니다.
+# ===================================================================
 gui:
-  # GUI 창의 제목입니다. 색상 코드를 사용할 수 있습니다.
+  # GUI 창의 제목입니다. Bukkit/Spigot 색상 코드(&)를 사용하여 꾸밀 수 있습니다.
+  # 예: "&6[ &eMy Skills &6]"
   title: "&8나의 스킬"
-  # GUI 창의 크기입니다. 9의 배수 (9, 18, 27, 36, 45, 54)로 설정해야 합니다.
+
+  # GUI 창의 크기입니다. 반드시 9의 배수 (9, 18, 27, 36, 45, 54) 중 하나여야 합니다.
   size: 9
 
-  # 이 값이 true이면, 모든 GUI 아이템의 재료가 STRUCTURE_VOID로 대체됩니다.  # 투명한 STRUCTURE_VOID 텍스처를 가진 커스텀 리소스 팩을 사용하는 경우에 유용합니다.  # 이를 통해 GUI 디자인의 자유도를 높일 수 있습니다.  items-all-structure-void: false
+  # [고급 설정] 모든 GUI 아이템의 재료를 STRUCTURE_VOID로 강제 변경합니다.
+  # 커스텀 리소스팩을 사용하여 GUI 텍스처를 완전히 제어하고 싶을 때 유용합니다.
+  # true로 설정하면 아래 'material' 설정이 무시되고 모두 STRUCTURE_VOID로 표시됩니다.
   items-all-structure-void: false
 
-  # 각 스킬 아이템의 설정입니다.
+  # 각 스킬 아이템을 설정하는 부분입니다.
   items:
+    # --- 채광 스킬 ---
     mining:
-      # 아이템의 재료입니다. Minecraft Material 이름을 사용합니다. (예: DIAMOND_PICKAXE)
+      # 아이템의 종류(Material)입니다. 마인크래프트 아이템 이름을 대문자로 입력합니다.
+      # 예: DIAMOND_PICKAXE, IRON_INGOT, STONE 등
+      # 아이템 목록: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
       material: DIAMOND_PICKAXE
-      # 아이템의 표시 이름입니다. 색상 코드를 사용할 수 있습니다.
+      # 아이템에 표시될 이름입니다. 색상 코드(&)를 사용할 수 있습니다.
       display_name: "&b채광 스킬"
-      # 아이템의 설명(Lore)입니다. 각 줄은 리스트로 추가합니다.
-      # {level}, {exp}, {required_exp} 플레이스홀더를 사용할 수 있습니다.
+      # 아이템의 설명(Lore)입니다. 여러 줄을 추가할 수 있습니다.
+      # 사용 가능한 플레이스홀더:
+      # {level}: 현재 레벨
+      # {exp}: 현재 경험치
+      # {required_exp}: 다음 레벨업에 필요한 총 경험치
+      # {remaining_exp}: 다음 레벨까지 남은 경험치
       lore:
         - "&7레벨: &f{level}"
         - "&7경험치: &f{exp} / {required_exp}"
         - "&7다음 레벨까지: &f{remaining_exp}"
-      # GUI 내 아이템의 슬롯 위치입니다. 0부터 시작합니다.
+      # GUI 창 안에서 아이템이 위치할 슬롯 번호입니다. (0부터 시작, 0-8, 9-17, ...)
       slot: 2
 
+    # --- 농사 스킬 ---
     farming:
       material: DIAMOND_HOE
       display_name: "&a농사 스킬"
@@ -38,6 +62,7 @@ gui:
         - "&7다음 레벨까지: &f{remaining_exp}"
       slot: 3
 
+    # --- 낚시 스킬 ---
     fishing:
       material: FISHING_ROD
       display_name: "&9낚시 스킬"
@@ -47,6 +72,7 @@ gui:
         - "&7다음 레벨까지: &f{remaining_exp}"
       slot: 4
 
+    # --- 사냥 스킬 ---
     hunting:
       material: BOW
       display_name: "&c사냥 스킬"
@@ -56,6 +82,7 @@ gui:
         - "&7다음 레벨까지: &f{remaining_exp}"
       slot: 5
 
+    # --- 채집 스킬 ---
     gathering:
       material: OAK_LEAVES
       display_name: "&2채집 스킬"
@@ -65,11 +92,15 @@ gui:
         - "&7다음 레벨까지: &f{remaining_exp}"
       slot: 6
 
+# ===================================================================
 # 경험치 획득 설정
+# 각 스킬의 행동에 따른 경험치 획득량을 설정합니다.
+# ===================================================================
 exp_gain:
-  # 채광 스킬 경험치 설정
+  # --- 채광 스킬 경험치 ---
   mining:
-    # 특정 블록 파괴 시 얻는 경험치입니다. Material 이름을 사용합니다.
+    # 특정 블록을 파괴했을 때 얻는 경험치입니다.
+    # 형식: <블록 Material 이름>: <경험치량>
     block_break:
       STONE: 5
       COAL_ORE: 10
@@ -85,9 +116,10 @@ exp_gain:
       NETHER_QUARTZ_ORE: 15
       NETHER_GOLD_ORE: 20
       ANCIENT_DEBRIS: 100
-  # 농사 스킬 경험치 설정
+
+  # --- 농사 스킬 경험치 ---
   farming:
-    # 특정 작물 수확 시 얻는 경험치입니다. Material 이름을 사용합니다.
+    # 특정 작물을 수확했을 때 얻는 경험치입니다.
     crop_harvest:
       WHEAT: 7
       CARROTS: 8
@@ -99,32 +131,36 @@ exp_gain:
       CACTUS: 5
       BAMBOO: 5
       COCOA_BEANS: 7
-    # 씨앗 심기 시 얻는 경험치입니다. Material 이름을 사용합니다.
+    # 씨앗을 심었을 때 얻는 경험치입니다.
     plant_seed:
       WHEAT_SEEDS: 2
       CARROT: 2
       POTATO: 2
       BEETROOT_SEEDS: 2
-    # 밭 갈기 시 얻는 경험치입니다.
+    # 밭을 갈았을 때 얻는 경험치입니다.
     till_land: 3
-    # 동물 번식 시 얻는 경험치입니다. EntityType 이름을 사용합니다.
+    # 동물을 번식시켰을 때 얻는 경험치입니다.
+    # 형식: <엔티티 타입 이름>: <경험치량>
+    # 엔티티 목록: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
     breed_animal:
       COW: 10
       PIG: 10
       SHEEP: 10
       CHICKEN: 8
       RABBIT: 8
-  # 낚시 스킬 경험치 설정
+
+  # --- 낚시 스킬 경험치 ---
   fishing:
-    # 물고기 낚시 성공 시 얻는 기본 경험치입니다.
+    # 물고기를 낚았을 때 얻는 기본 경험치입니다.
     catch: 15
-    # 보물 낚시 성공 시 얻는 경험치입니다.
+    # 보물을 낚았을 때 얻는 경험치입니다.
     catch_treasure: 30
-    # 쓰레기 낚시 성공 시 얻는 경험치입니다.
+    # 쓰레기를 낚았을 때 얻는 경험치입니다.
     catch_junk: 5
-  # 사냥 스킬 경험치 설정
+
+  # --- 사냥 스킬 경험치 ---
   hunting:
-    # 특정 엔티티 처치 시 얻는 경험치입니다. EntityType 이름을 사용합니다.
+    # 특정 몬스터나 동물을 사냥했을 때 얻는 경험치입니다.
     entity_kill:
       ZOMBIE: 20
       SKELETON: 25
@@ -142,25 +178,65 @@ exp_gain:
       SHEEP: 10
       CHICKEN: 8
       RABBIT: 8
-  # 채집 스킬 경험치 설정
+
+  # --- 채집 스킬 경험치 ---
   gathering:
-    # 특정 블록 파괴 시 얻는 경험치입니다. Material 이름을 사용합니다.
+    # 특정 블록을 파괴하거나 상호작용했을 때 얻는 경험치입니다.
     block_break:
-      TALL_GRASS: 3
+      # 흙, 잔디 블록
+      DIRT: 2
       GRASS_BLOCK: 3
-      OAK_LEAVES: 5
-      BIRCH_LEAVES: 5
-      SPRUCE_LEAVES: 5
-      JUNGLE_LEAVES: 5
-      ACACIA_LEAVES: 5
-      DARK_OAK_LEAVES: 5
+      # 자갈, 모래
+      GRAVEL: 2
+      SAND: 2
+      # 돌, 조약돌 (채광과 별개로 채집 경험치 획득)
+      STONE: 2
+      COBBLESTONE: 1
+      # 나무 원목
       OAK_LOG: 10
       BIRCH_LOG: 10
       SPRUCE_LOG: 10
       JUNGLE_LOG: 10
       ACACIA_LOG: 10
       DARK_OAK_LOG: 10
-      STONE: 2 # 돌 채집 경험치 (채광과 별개)
-      DIRT: 2
-      GRAVEL: 2
-      SAND: 2
+      # 나뭇잎
+      OAK_LEAVES: 5
+      BIRCH_LEAVES: 5
+      SPRUCE_LEAVES: 5
+      JUNGLE_LEAVES: 5
+      ACACIA_LEAVES: 5
+      DARK_OAK_LEAVES: 5
+      # 버섯
+      BROWN_MUSHROOM: 3
+      RED_MUSHROOM: 3
+      # 열매
+      SWEET_BERRIES: 4
+      GLOW_BERRIES: 4
+      # 켈프
+      KELP: 2
+      # 꽃 (종류별로 추가 가능)
+      DANDELION: 2 # 민들레
+      POPPY: 2 # 양귀비
+      BLUE_ORCHID: 2 # 파란색 난초
+      ALLIUM: 2 # 알리움
+      AZURE_BLUET: 2 # 선애기별꽃
+      RED_TULIP: 2
+      ORANGE_TULIP: 2
+      WHITE_TULIP: 2
+      PINK_TULIP: 2
+      OXEYE_DAISY: 2 # 데이지
+      CORNFLOWER: 2 # 수레국화
+      LILY_OF_THE_VALLEY: 2 # 은방울꽃
+      WITHER_ROSE: 10 # 위더 장미
+      SUNFLOWER: 3 # 해바라기
+      LILAC: 3 # 라일락
+      ROSE_BUSH: 3 # 장미 덤불
+      PEONY: 3 # 작약
+      # 풀, 고사리
+      GRASS: 1
+      TALL_GRASS: 3
+      FERN: 1
+      LARGE_FERN: 2
+      # 벌집
+      BEE_NEST: 15
+      BEEHIVE: 15

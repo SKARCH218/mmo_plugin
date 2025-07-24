@@ -36,3 +36,11 @@
   internal_error: "&c명령어 실행 중 내부 오류가 발생했습니다."
   no_permission: "&c권한이 없습니다."
   view_gui_success: "&b{player}님의 스킬 GUI를 열었습니다."
+
+  # 스킬 만렙 달성 메시지
+  skill_max_level_title: "&b&l스킬 마스터!"
+  skill_max_level: "&e{skill} 스킬이 만렙에 도달했습니다!"
+
+  # 모든 스킬 만렙 달성 메시지
+  all_skills_max_level_title: "&6&l모든 스킬 마스터!"
+  all_skills_max_level: "&e모든 스킬을 마스터했습니다!"
