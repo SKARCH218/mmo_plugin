@@ -9,4 +9,4 @@ commands:
   mmoadmin:
     description: Admin commands for LightMMO.
     usage: /mmoadmin <args>
-    permission: lightmmo.admin
+    permission: op

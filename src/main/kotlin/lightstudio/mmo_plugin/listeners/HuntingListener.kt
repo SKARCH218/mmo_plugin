@@ -14,6 +14,12 @@ class HuntingListener(private val plugin: LightMmo) : Listener {
         try {
             val killer = event.entity.killer ?: return
 
+            val worldName = killer.world.name
+            val enabledWorlds = plugin.config.getStringList("enabled-worlds")
+            if (enabledWorlds.isNotEmpty() && worldName !in enabledWorlds) {
+                return
+            }
+
             if (event.entity.type != EntityType.PLAYER) {
                 val exp = plugin.config.getInt("exp_gain.hunting.entity_kill.${event.entity.type.name}", 0)
                 if (exp > 0) {

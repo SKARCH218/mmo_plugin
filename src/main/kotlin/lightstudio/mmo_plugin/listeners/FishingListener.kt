@@ -11,6 +11,12 @@ class FishingListener(private val plugin: LightMmo) : Listener {
     @EventHandler
     fun onPlayerFish(event: PlayerFishEvent) {
         try {
+            val worldName = event.player.world.name
+            val enabledWorlds = plugin.config.getStringList("enabled-worlds")
+            if (enabledWorlds.isNotEmpty() && worldName !in enabledWorlds) {
+                return
+            }
+
             when (event.state) {
                 PlayerFishEvent.State.CAUGHT_FISH -> {
                     val exp = plugin.config.getInt("exp_gain.fishing.catch", 0)

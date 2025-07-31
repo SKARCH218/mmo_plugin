@@ -12,6 +12,12 @@ class GatheringListener(private val plugin: LightMmo) : Listener {
     @EventHandler
     fun onBlockBreak(event: BlockBreakEvent) {
         try {
+            val worldName = event.player.world.name
+            val enabledWorlds = plugin.config.getStringList("enabled-worlds")
+            if (enabledWorlds.isNotEmpty() && worldName !in enabledWorlds) {
+                return
+            }
+
             val exp = plugin.config.getInt("exp_gain.gathering.block_break.${event.block.type.name}", 0)
             if (exp > 0) {
                 plugin.skillManager.addExp(event.player, SkillType.GATHERING, exp)
