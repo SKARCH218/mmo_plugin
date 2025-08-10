@@ -1,56 +1,148 @@
-# LightMMO 플러그인 경험치 설정 파일
-# 이 파일은 각 스킬의 레벨업에 필요한 경험치 공식과 레벨업 보상을 정의합니다.
-
-# 기본 경험치 공식
-# {level} 플레이스홀더를 사용하여 레벨에 따라 필요한 경험치를 계산할 수 있습니다.
-# 예: "100 * level", "50 + (level * 10)"
-default-exp-formula: "100 * level"
-
-# 각 스킬별 설정
-skills:
+# ===================================================================
+# 경험치 획득 설정
+# 각 스킬의 행동에 따른 경험치 획득량을 설정합니다.
+# ===================================================================
+exp_gain:
+  # --- 채광 스킬 경험치 ---
   mining:
-    # 레벨업 보상
-    # 각 레벨에 도달했을 때 실행될 명령어 목록을 정의합니다.
-    # {player} 플레이스홀더는 레벨업한 플레이어의 이름으로 자동 치환됩니다.
-    rewards:
-      5:
-        - "give {player} iron_pickaxe 1"
-        - "msg {player} You reached Mining Level 5!"
-      10:
-        - "give {player} diamond_pickaxe 1"
+    # 특정 블록을 파괴했을 때 얻는 경험치입니다.
+    # 형식: <블록 Material 이름>: <경험치량>
+    block_break:
+      STONE: 5
+      COAL_ORE: 10
+      IRON_ORE: 15
+      GOLD_ORE: 20
+      DIAMOND_ORE: 50
+      EMERALD_ORE: 60
+      DEEPSLATE_COAL_ORE: 10
+      DEEPSLATE_IRON_ORE: 20
+      DEEPSLATE_GOLD_ORE: 25
+      DEEPSLATE_DIAMOND_ORE: 55
+      DEEPSLATE_EMERALD_ORE: 65
+      NETHER_QUARTZ_ORE: 15
+      NETHER_GOLD_ORE: 20
+      ANCIENT_DEBRIS: 100
+
+  # --- 농사 스킬 경험치 ---
   farming:
-    rewards:
-      5:
-        - "give {player} bread 10"
-        - "msg {player} You reached Farming Level 5!"
+    # 특정 작물을 수확했을 때 얻는 경험치입니다.
+    crop_harvest:
+      WHEAT: 7
+      CARROTS: 8
+      POTATOES: 8
+      BEETROOTS: 9
+      PUMPKIN: 10
+      MELON: 10
+      SUGAR_CANE: 5
+      CACTUS: 5
+      BAMBOO: 5
+      COCOA_BEANS: 7
+    # 씨앗을 심었을 때 얻는 경험치입니다.
+    plant_seed:
+      WHEAT_SEEDS: 2
+      CARROT: 2
+      POTATO: 2
+      BEETROOT_SEEDS: 2
+    # 밭을 갈았을 때 얻는 경험치입니다.
+    till_land: 3
+    # 동물을 번식시켰을 때 얻는 경험치입니다.
+    # 형식: <엔티티 타입 이름>: <경험치량>
+    # 엔티티 목록: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+    breed_animal:
+      COW: 10
+      PIG: 10
+      SHEEP: 10
+      CHICKEN: 8
+      RABBIT: 8
+
+  # --- 낚시 스킬 경험치 ---
   fishing:
-    rewards:
-      5:
-        - "give {player} raw_fish 5"
-        - "msg {player} You reached Fishing Level 5!"
+    # 물고기를 낚았을 때 얻는 기본 경험치입니다.
+    catch: 15
+    # 보물을 낚았을 때 얻는 경험치입니다.
+    catch_treasure: 30
+    # 쓰레기를 낚았을 때 얻는 경험치입니다.
+    catch_junk: 5
+
+  # --- 사냥 스킬 경험치 ---
   hunting:
-    rewards:
-      5:
-        - "give {player} cooked_beef 3"
-        - "msg {player} You reached Hunting Level 5!"
+    # 특정 몬스터나 동물을 사냥했을 때 얻는 경험치입니다.
+    entity_kill:
+      ZOMBIE: 20
+      SKELETON: 25
+      SPIDER: 20
+      CREEPER: 30
+      ENDERMAN: 40
+      BLAZE: 35
+      GHAST: 50
+      WITHER_SKELETON: 30
+      PIGLIN: 25
+      HOGLIN: 25
+      STRIDER: 15
+      COW: 10
+      PIG: 10
+      SHEEP: 10
+      CHICKEN: 8
+      RABBIT: 8
+
+  # --- 채집 스킬 경험치 ---
   gathering:
-    rewards:
-      5:
-        - "give {player} stick 10"
-        - "msg {player} You reached Gathering Level 5!"
-
-# ===================================================================
-# 만렙 도달 시 실행될 명령어 설정
-# ===================================================================
-
-# 개별 스킬이 만렙에 도달했을 때 실행될 명령어 목록입니다.
-# {player} 플레이스홀더는 만렙에 도달한 플레이어의 이름으로 자동 치환됩니다.
-on_skill_max_level_commands:
-  - "msg {player} &a축하합니다! {skill} 스킬이 만렙에 도달했습니다!"
-  - "give {player} diamond 1"
-
-# 모든 스킬이 만렙에 도달했을 때 실행될 명령어 목록입니다.
-# {player} 플레이스홀더는 모든 스킬이 만렙에 도달한 플레이어의 이름으로 자동 치환됩니다.
-on_all_skills_max_level_commands:
-  - "broadcast &6{player} 님이 모든 스킬을 마스터했습니다! 축하해주세요!"
-  - "give {player} nether_star 1"
+    # 특정 블록을 파괴하거나 상호작용했을 때 얻는 경험치입니다.
+    block_break:
+      # 흙, 잔디 블록
+      DIRT: 2
+      GRASS_BLOCK: 3
+      # 자갈, 모래
+      GRAVEL: 2
+      SAND: 2
+      # 돌, 조약돌 (채광과 별개로 채집 경험치 획득)
+      STONE: 2
+      COBBLESTONE: 1
+      # 나무 원목
+      OAK_LOG: 10
+      BIRCH_LOG: 10
+      SPRUCE_LOG: 10
+      JUNGLE_LOG: 10
+      ACACIA_LOG: 10
+      DARK_OAK_LOG: 10
+      # 나뭇잎
+      OAK_LEAVES: 5
+      BIRCH_LEAVES: 5
+      SPRUCE_LEAVES: 5
+      JUNGLE_LEAVES: 5
+      ACACIA_LEAVES: 5
+      DARK_OAK_LEAVES: 5
+      # 버섯
+      BROWN_MUSHROOM: 3
+      RED_MUSHROOM: 3
+      # 열매
+      SWEET_BERRIES: 4
+      GLOW_BERRIES: 4
+      # 켈프
+      KELP: 2
+      # 꽃 (종류별로 추가 가능)
+      DANDELION: 2 # 민들레
+      POPPY: 2 # 양귀비
+      BLUE_ORCHID: 2 # 파란색 난초
+      ALLIUM: 2 # 알리움
+      AZURE_BLUET: 2 # 선애기별꽃
+      RED_TULIP: 2
+      ORANGE_TULIP: 2
+      WHITE_TULIP: 2
+      PINK_TULIP: 2
+      OXEYE_DAISY: 2 # 데이지
+      CORNFLOWER: 2 # 수레국화
+      LILY_OF_THE_VALLEY: 2 # 은방울꽃
+      WITHER_ROSE: 10 # 위더 장미
+      SUNFLOWER: 3 # 해바라기
+      LILAC: 3 # 라일락
+      ROSE_BUSH: 3 # 장미 덤불
+      PEONY: 3 # 작약
+      # 풀, 고사리
+      GRASS: 1
+      TALL_GRASS: 3
+      FERN: 1
+      LARGE_FERN: 2
+      # 벌집
+      BEE_NEST: 15
+      BEEHIVE: 15

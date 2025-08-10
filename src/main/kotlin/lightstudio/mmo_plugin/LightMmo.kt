@@ -27,6 +27,8 @@ class LightMmo : JavaPlugin() {
         private set
     lateinit var expConfig: FileConfiguration
         private set
+    lateinit var rewardConfig: FileConfiguration
+        private set
     private var placeholderAPIExpansion: lightstudio.mmo_plugin.expansion.PlaceholderAPIExpansion? = null
 
     override fun onEnable() {
@@ -35,6 +37,7 @@ class LightMmo : JavaPlugin() {
             saveDefaultConfig()
             loadLanguageConfig()
             loadExpConfig()
+            loadRewardConfig()
 
             // Database
             database = Database(this)
@@ -46,7 +49,7 @@ class LightMmo : JavaPlugin() {
 
             // Skill Manager
             val maxLevel = config.getInt("max_level", 0) // 0 means infinite
-            skillManager = SkillManager(this, maxLevel, expConfig)
+            skillManager = SkillManager(this, maxLevel, rewardConfig)
 
             // Skill GUI
             skillGui = lightstudio.mmo_plugin.gui.SkillGui(this)
@@ -65,6 +68,16 @@ class LightMmo : JavaPlugin() {
             } else {
                 logger.warning("PlaceholderAPI not found. Placeholder expansion will not be registered.")
             }
+
+            // Schedule hourly data save
+            server.scheduler.runTaskTimerAsynchronously(this, Runnable {
+                logger.info("Saving all online player data (hourly backup)...")
+                server.onlinePlayers.forEach { player ->
+                    skillManager.saveAllPlayerSkills(player.uniqueId.toString())
+                }
+                logger.info("Hourly data save complete.")
+            }, 20L * 60 * 60, 20L * 60 * 60) // 20 ticks/second * 60 seconds/minute * 60 minutes/hour = 1 hour
+
             logger.info("LightMMO plugin enabled.")
         } catch (e: Exception) {
             logger.severe("Error enabling LightMMO plugin: " + e.message)
@@ -115,10 +128,11 @@ class LightMmo : JavaPlugin() {
             saveDefaultConfig()
             loadLanguageConfig()
             loadExpConfig()
+            loadRewardConfig()
 
             // Re-initialize Skill Manager with new config values
             val maxLevel = config.getInt("max_level", 0)
-            skillManager = SkillManager(this, maxLevel, expConfig)
+            skillManager = SkillManager(this, maxLevel, rewardConfig)
 
             // Invalidate cache
             if (::skillCache.isInitialized) skillCache.invalidateAll()
@@ -144,11 +158,11 @@ class LightMmo : JavaPlugin() {
     }
 
     private fun registerListeners() {
-        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.BlockBreakListener(this), this)
-        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.FishingListener(this), this)
-        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.HuntingListener(this), this)
-        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.GatheringListener(this), this)
-        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.FarmingListener(this), this)
+        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.BlockBreakListener(this, expConfig), this)
+        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.FishingListener(this, expConfig), this)
+        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.HuntingListener(this, expConfig), this)
+        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.GatheringListener(this, expConfig), this)
+        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.FarmingListener(this, expConfig), this)
         server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.PlayerConnectionListener(this), this)
         server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.SkillGuiListener(this), this)
     }
@@ -164,29 +178,44 @@ class LightMmo : JavaPlugin() {
         val langFileName = "lang.yml"
         val langFile = File(dataFolder, langFileName)
 
-        // Always save the resource to ensure it's present in the data folder
-        saveResource(langFileName, false)
+        if (!langFile.exists()) {
+            saveResource(langFileName, false)
+        }
 
         langConfig = YamlConfiguration.loadConfiguration(langFile)
 
-        // If the language file is still empty after loading, log a warning.
         if (langConfig.getKeys(false).isEmpty()) {
-            logger.warning("Language file '$langFileName' is empty or could not be loaded. Please check your language file configuration.")
-            if (!langFile.exists()) {
-                logger.severe("Language file '$langFileName' does not exist in data folder: ${langFile.absolutePath}")
-            } else if (langFile.length() == 0L) {
-                logger.severe("Language file '$langFileName' exists but is empty: ${langFile.absolutePath}")
-            }
+            logger.warning("Language file '$langFileName' is empty or could not be loaded.")
         }
     }
 
     private fun loadExpConfig() {
         val expFileName = "exp.yml"
         val expFile = File(dataFolder, expFileName)
-        saveResource(expFileName, false)
+
+        if (!expFile.exists()) {
+            saveResource(expFileName, false)
+        }
+
         expConfig = YamlConfiguration.loadConfiguration(expFile)
+
         if (expConfig.getKeys(false).isEmpty()) {
-            logger.warning("Experience file '$expFileName' is empty or could not be loaded. Please check your experience file configuration.")
+            logger.warning("Experience file '$expFileName' is empty or could not be loaded.")
+        }
+    }
+
+    private fun loadRewardConfig() {
+        val rewardFileName = "reward.yml"
+        val rewardFile = File(dataFolder, rewardFileName)
+
+        if (!rewardFile.exists()) {
+            saveResource(rewardFileName, false)
+        }
+
+        rewardConfig = YamlConfiguration.loadConfiguration(rewardFile)
+
+        if (rewardConfig.getKeys(false).isEmpty()) {
+            logger.warning("Reward file '$rewardFileName' is empty or could not be loaded.")
         }
     }
 }

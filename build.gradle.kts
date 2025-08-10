@@ -18,6 +18,8 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/") {
         name = "sonatype"
     }
+    maven("https://jitpack.io")
+    maven("https://repo.codemc.io/repository/maven-public/")
 }
 
 dependencies {
@@ -27,6 +29,7 @@ dependencies {
     implementation("net.objecthunter:exp4j:0.4.8")
     compileOnly("me.clip:placeholderapi:2.11.5")
     implementation("com.google.guava:guava:33.0.0-jre")
+    compileOnly("com.github.LoneDev6:api-itemsadder:3.6.3-beta-14")
 }
 
 tasks {

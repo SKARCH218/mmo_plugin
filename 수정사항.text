@@ -1,0 +1,38 @@
+itemsadder 에서 정의한 커스텀 농작물은 농사레벨이 오르지 않는 문제점이 있음
+따라서
+```
+exp_gain:
+  # ... #
+  # --- 농사 스킬 경험치 ---
+  farming:
+    # 특정 작물을 수확했을 때 얻는 경험치입니다.
+    crop_harvest:
+      WHEAT: 7
+      CARROTS: 8
+      POTATOES: 8
+      BEETROOTS: 9
+      PUMPKIN: 10
+      MELON: 10
+      SUGAR_CANE: 5
+      CACTUS: 5
+      BAMBOO: 5
+      COCOA_BEANS: 7
+      addcrop:addcrop_bean_stage5 # 최종 성장 형태 trip_wire 즉 '실' 임 이 커스텀 블럭을 파괴시 경험치가 오르게 설정
+    # 씨앗을 심었을 때 얻는 경험치입니다.
+    plant_seed:
+      WHEAT_SEEDS: 2
+      CARROT: 2
+      POTATO: 2
+      BEETROOT_SEEDS: 2
+    # 밭을 갈았을 때 얻는 경험치입니다.
+    till_land: 3
+    # 동물을 번식시켰을 때 얻는 경험치입니다.
+    # 형식: <엔티티 타입 이름>: <경험치량>
+    # 엔티티 목록: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/entity/EntityType.html
+    breed_animal:
+      COW: 10
+      PIG: 10
+      SHEEP: 10
+      CHICKEN: 8
+      RABBIT: 8
+```

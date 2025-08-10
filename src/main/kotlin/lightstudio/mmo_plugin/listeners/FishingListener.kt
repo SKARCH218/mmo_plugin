@@ -5,8 +5,9 @@ import lightstudio.mmo_plugin.SkillType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerFishEvent
+import org.bukkit.configuration.file.FileConfiguration
 
-class FishingListener(private val plugin: LightMmo) : Listener {
+class FishingListener(private val plugin: LightMmo, private val expConfig: FileConfiguration) : Listener {
 
     @EventHandler
     fun onPlayerFish(event: PlayerFishEvent) {
@@ -19,7 +20,7 @@ class FishingListener(private val plugin: LightMmo) : Listener {
 
             when (event.state) {
                 PlayerFishEvent.State.CAUGHT_FISH -> {
-                    val exp = plugin.config.getInt("exp_gain.fishing.catch", 0)
+                    val exp = expConfig.getInt("exp_gain.fishing.catch", 0)
                     if (exp > 0) {
                         plugin.skillManager.addExp(event.player, SkillType.FISHING, exp)
                     }
@@ -30,12 +31,12 @@ class FishingListener(private val plugin: LightMmo) : Listener {
                     val itemType = caughtItem.itemStack.type
 
                     if (itemType.isItem) { // 간단하게 아이템이면 보물로 간주
-                        val exp = plugin.config.getInt("exp_gain.fishing.catch_treasure", 0)
+                        val exp = expConfig.getInt("exp_gain.fishing.catch_treasure", 0)
                         if (exp > 0) {
                             plugin.skillManager.addExp(event.player, SkillType.FISHING, exp)
                         }
                     } else { // 그 외는 쓰레기로 간주
-                        val exp = plugin.config.getInt("exp_gain.fishing.catch_junk", 0)
+                        val exp = expConfig.getInt("exp_gain.fishing.catch_junk", 0)
                         if (exp > 0) {
                             plugin.skillManager.addExp(event.player, SkillType.FISHING, exp)
                         }

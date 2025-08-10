@@ -1,0 +1,56 @@
+# LightMMO 플러그인 경험치 설정 파일
+# 이 파일은 각 스킬의 레벨업에 필요한 경험치 공식과 레벨업 보상을 정의합니다.
+
+# 기본 경험치 공식
+# {level} 플레이스홀더를 사용하여 레벨에 따라 필요한 경험치를 계산할 수 있습니다.
+# 예: "100 * level", "50 + (level * 10)"
+default-exp-formula: "100 * level"
+
+# 각 스킬별 설정
+skills:
+  mining:
+    # 레벨업 보상
+    # 각 레벨에 도달했을 때 실행될 명령어 목록을 정의합니다.
+    # {player} 플레이스홀더는 레벨업한 플레이어의 이름으로 자동 치환됩니다.
+    rewards:
+      5:
+        - "give {player} iron_pickaxe 1"
+        - "msg {player} You reached Mining Level 5!"
+      10:
+        - "give {player} diamond_pickaxe 1"
+  farming:
+    rewards:
+      5:
+        - "give {player} bread 10"
+        - "msg {player} You reached Farming Level 5!"
+  fishing:
+    rewards:
+      5:
+        - "give {player} raw_fish 5"
+        - "msg {player} You reached Fishing Level 5!"
+  hunting:
+    rewards:
+      5:
+        - "give {player} cooked_beef 3"
+        - "msg {player} You reached Hunting Level 5!"
+  gathering:
+    rewards:
+      5:
+        - "give {player} stick 10"
+        - "msg {player} You reached Gathering Level 5!"
+
+# ===================================================================
+# 만렙 도달 시 실행될 명령어 설정
+# ===================================================================
+
+# 개별 스킬이 만렙에 도달했을 때 실행될 명령어 목록입니다.
+# {player} 플레이스홀더는 만렙에 도달한 플레이어의 이름으로 자동 치환됩니다.
+on_skill_max_level_commands:
+  - "msg {player} &a축하합니다! {skill} 스킬이 만렙에 도달했습니다!"
+  - "give {player} diamond 1"
+
+# 모든 스킬이 만렙에 도달했을 때 실행될 명령어 목록입니다.
+# {player} 플레이스홀더는 모든 스킬이 만렙에 도달한 플레이어의 이름으로 자동 치환됩니다.
+on_all_skills_max_level_commands:
+  - "broadcast &6{player} 님이 모든 스킬을 마스터했습니다! 축하해주세요!"
+  - "give {player} nether_star 1"

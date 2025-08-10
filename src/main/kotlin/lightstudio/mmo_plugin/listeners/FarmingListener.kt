@@ -11,8 +11,12 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.Ageable
 import org.bukkit.entity.Player
+import org.bukkit.configuration.file.FileConfiguration
+import dev.lone.itemsadder.api.CustomBlock
 
-class FarmingListener(private val plugin: LightMmo) : Listener {
+class FarmingListener(private val plugin: LightMmo, private val expConfig: FileConfiguration) : Listener {
+
+    private val itemsAdderLoaded = plugin.server.pluginManager.isPluginEnabled("ItemsAdder")
 
     private fun isWorldEnabled(worldName: String): Boolean {
         val enabledWorlds = plugin.config.getStringList("enabled-worlds")
@@ -24,11 +28,24 @@ class FarmingListener(private val plugin: LightMmo) : Listener {
         try {
             if (!isWorldEnabled(event.player.world.name)) return
 
-            // 농작물 수확 시 경험치 지급 (예: 밀, 당근, 감자, 사탕무)
+            // Handle ItemsAdder custom crops
+            if (itemsAdderLoaded) {
+                val customBlock = CustomBlock.byAlreadyPlaced(event.block)
+                if (customBlock != null) {
+                    val namespacedID = customBlock.namespacedID
+                    val exp = expConfig.getInt("exp_gain.farming.crop_harvest.$namespacedID", 0)
+                    if (exp > 0) {
+                        plugin.skillManager.addExp(event.player, SkillType.FARMING, exp)
+                        return // Stop processing to avoid double exp
+                    }
+                }
+            }
+
+            // Handle vanilla crops
             if (event.block.blockData is Ageable) {
                 val ageable = event.block.blockData as Ageable
                 if (ageable.age == ageable.maximumAge) {
-                    val exp = plugin.config.getInt("exp_gain.farming.crop_harvest.${event.block.type.name}", 0)
+                    val exp = expConfig.getInt("exp_gain.farming.crop_harvest.${event.block.type.name}", 0)
                     if (exp > 0) {
                         plugin.skillManager.addExp(event.player, SkillType.FARMING, exp)
                     }
@@ -51,7 +68,7 @@ class FarmingListener(private val plugin: LightMmo) : Listener {
             // 씨앗 심기 경험치
             if (event.action.name == "RIGHT_CLICK_BLOCK" && clickedBlock.type == Material.FARMLAND) {
                 val itemInHand = event.item ?: return
-                val exp = plugin.config.getInt("exp_gain.farming.plant_seed.${itemInHand.type.name}", 0)
+                val exp = expConfig.getInt("exp_gain.farming.plant_seed.${itemInHand.type.name}", 0)
                 if (exp > 0) {
                     plugin.skillManager.addExp(player, SkillType.FARMING, exp)
                 }
@@ -61,7 +78,7 @@ class FarmingListener(private val plugin: LightMmo) : Listener {
             if (event.action.name == "RIGHT_CLICK_BLOCK" &&
                 (clickedBlock.type == Material.DIRT || clickedBlock.type == Material.GRASS_BLOCK) &&
                 event.item?.type?.name?.endsWith("_HOE") == true) {
-                val exp = plugin.config.getInt("exp_gain.farming.till_land", 0)
+                val exp = expConfig.getInt("exp_gain.farming.till_land", 0)
                 if (exp > 0) {
                     plugin.skillManager.addExp(player, SkillType.FARMING, exp)
                 }
@@ -78,7 +95,7 @@ class FarmingListener(private val plugin: LightMmo) : Listener {
             val player = event.breeder as? Player ?: return
             if (!isWorldEnabled(player.world.name)) return
 
-            val exp = plugin.config.getInt("exp_gain.farming.breed_animal.${event.entity.type.name}", 0)
+            val exp = expConfig.getInt("exp_gain.farming.breed_animal.${event.entity.type.name}", 0)
             if (exp > 0) {
                 plugin.skillManager.addExp(player, SkillType.FARMING, exp)
             }

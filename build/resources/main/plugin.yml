@@ -1,7 +1,8 @@
 name: LightMMO
-version: '1.0-SNAPSHOT'
+version: '2.0'
 main: lightstudio.mmo_plugin.LightMmo
 api-version: '1.21'
+softdepend: [PlaceholderAPI, ItemsAdder]
 commands:
   mmo:
     description: Shows your skill information.

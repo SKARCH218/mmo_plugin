@@ -2,6 +2,7 @@ package lightstudio.mmo_plugin
 
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
+import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
@@ -11,6 +12,26 @@ class SkillCache(private val plugin: LightMmo) {
         .maximumSize(1000) // 최대 1000명의 플레이어 데이터 캐싱
         .expireAfterAccess(10, TimeUnit.MINUTES) // 10분 동안 접근 없으면 만료
         .build()
+
+    fun getPlayerSkillData(uuid: UUID, skillType: SkillType): PlayerSkillData {
+        val key = Pair(uuid.toString(), skillType)
+        // 1. Try to get from cache
+        var skillData = cache.getIfPresent(key)
+
+        if (skillData == null) {
+            // 2. If not in cache, load synchronously from DB
+            skillData = plugin.databaseManager.loadPlayerSkillDataSync(uuid.toString(), skillType)
+            if (skillData != null) {
+                // 3. If loaded from DB, put it into the cache
+                cache.put(key, skillData)
+            } else {
+                // 4. If not in DB either, create default data and cache it
+                skillData = PlayerSkillData(1, 0)
+                cache.put(key, skillData)
+            }
+        }
+        return skillData
+    }
 
     fun get(uuid: String, skillType: SkillType): CompletableFuture<PlayerSkillData> {
         val key = Pair(uuid, skillType)

@@ -15,7 +15,7 @@ enum class SkillType {
     GATHERING
 }
 
-class SkillManager(private val plugin: LightMmo, private val maxLevel: Int, private val expConfig: FileConfiguration) {
+class SkillManager(private val plugin: LightMmo, private val maxLevel: Int, private val rewardConfig: FileConfiguration) {
 
     fun addExp(player: Player, skill: SkillType, amount: Int) {
         val uuid = player.uniqueId.toString()
@@ -49,11 +49,11 @@ class SkillManager(private val plugin: LightMmo, private val maxLevel: Int, priv
                             10, 70, 20
                         )
                         // Max level sound and particles (optional, can be same as level up)
-                        player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+                        player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.3f, 1f)
                         player.spawnParticle(Particle.EXPLOSION, player.location, 50, 0.5, 0.5, 0.5, 0.1)
 
                         // Execute on_skill_max_level_commands
-                        val skillMaxLevelCommands = expConfig.getStringList("on_skill_max_level_commands")
+                        val skillMaxLevelCommands = rewardConfig.getStringList("on_skill_max_level_commands")
                         skillMaxLevelCommands.forEach { cmd ->
                             val finalCmd = cmd.replace("{player}", player.name).replace("{skill}", skill.name.lowercase().capitalize())
                             plugin.server.dispatchCommand(plugin.server.consoleSender, finalCmd)
@@ -68,11 +68,11 @@ class SkillManager(private val plugin: LightMmo, private val maxLevel: Int, priv
                         10, 70, 20
                     )
                     // Level up sound and particles
-                    player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+                    player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 0.3f, 1f)
                     player.spawnParticle(Particle.EXPLOSION, player.location, 50, 0.5, 0.5, 0.5, 0.1)
 
                     // Execute level up commands
-                    val commands = expConfig.getStringList("skills.${skill.name.lowercase()}.rewards.$newLevel")
+                    val commands = rewardConfig.getStringList("skills.${skill.name.lowercase()}.rewards.$newLevel")
                     commands.forEach { cmd ->
                         val finalCmd = cmd.replace("{player}", player.name)
                         plugin.server.dispatchCommand(plugin.server.consoleSender, finalCmd)
@@ -116,10 +116,10 @@ class SkillManager(private val plugin: LightMmo, private val maxLevel: Int, priv
                     10, 70, 20
                 )
                 // All skills maxed sound and particles (optional)
-                player.playSound(player.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f)
+                player.playSound(player.location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 0.3f, 1f)
                 player.spawnParticle(Particle.EXPLOSION, player.location, 100, 1.0, 1.0, 1.0, 0.1)
 
-                val allSkillsMaxLevelCommands = expConfig.getStringList("on_all_skills_max_level_commands")
+                val allSkillsMaxLevelCommands = rewardConfig.getStringList("on_all_skills_max_level_commands")
                 allSkillsMaxLevelCommands.forEach { cmd ->
                     val finalCmd = cmd.replace("{player}", player.name)
                     plugin.server.dispatchCommand(plugin.server.consoleSender, finalCmd)
@@ -144,7 +144,7 @@ class SkillManager(private val plugin: LightMmo, private val maxLevel: Int, priv
     }
 
     fun calculateRequiredExp(level: Int): Int {
-        val formula = plugin.config.getString("default-exp-formula", "100 * level")!!
+        val formula = rewardConfig.getString("default-exp-formula", "100 * level")!!
         val expression = net.objecthunter.exp4j.ExpressionBuilder(formula)
             .variables("level")
             .build()

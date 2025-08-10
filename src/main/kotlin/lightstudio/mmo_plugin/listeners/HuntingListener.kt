@@ -6,8 +6,9 @@ import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.configuration.file.FileConfiguration
 
-class HuntingListener(private val plugin: LightMmo) : Listener {
+class HuntingListener(private val plugin: LightMmo, private val expConfig: FileConfiguration) : Listener {
 
     @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
@@ -21,7 +22,7 @@ class HuntingListener(private val plugin: LightMmo) : Listener {
             }
 
             if (event.entity.type != EntityType.PLAYER) {
-                val exp = plugin.config.getInt("exp_gain.hunting.entity_kill.${event.entity.type.name}", 0)
+                val exp = expConfig.getInt("exp_gain.hunting.entity_kill.${event.entity.type.name}", 0)
                 if (exp > 0) {
                     plugin.skillManager.addExp(killer, SkillType.HUNTING, exp)
                 }
