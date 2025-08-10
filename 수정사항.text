@@ -1,5 +1,14 @@
 itemsadder 에서 정의한 커스텀 농작물은 농사레벨이 오르지 않는 문제점이 있음
 따라서
+
+config.yml
+```
+custom-pots:
+  - "customcrops:dry_pot" # 커스텀 블럭 타입 ia에서 커스텀 경작지 REAL_NOTE 이기 때문에 노트블럭임
+  - "customcrops:wet_pot"
+```
+
+exp.yml
 ```
 exp_gain:
   # ... #
@@ -17,13 +26,14 @@ exp_gain:
       CACTUS: 5
       BAMBOO: 5
       COCOA_BEANS: 7
-      addcrop:addcrop_bean_stage5 # 최종 성장 형태 trip_wire 즉 '실' 임 이 커스텀 블럭을 파괴시 경험치가 오르게 설정
+      addcrop:addcrop_bean_stage5 # 최종 성장 형태 trip_wire 즉 '실' 임 이 커스텀 블럭을 파괴시 반드시 파괴시 경험치가 오르게 설정
     # 씨앗을 심었을 때 얻는 경험치입니다.
     plant_seed:
       WHEAT_SEEDS: 2
       CARROT: 2
       POTATO: 2
       BEETROOT_SEEDS: 2
+      addcrop:addcrop_bean_seed # 커스텀 아이템 타입 paper 즉 '종이' 이걸들고 커스텀 경작지를 우클릭과 동시에 씨았의 갯수가 줄었다면 경험치 지급
     # 밭을 갈았을 때 얻는 경험치입니다.
     till_land: 3
     # 동물을 번식시켰을 때 얻는 경험치입니다.
@@ -36,3 +46,5 @@ exp_gain:
       CHICKEN: 8
       RABBIT: 8
 ```
+
+이 서버는 번지코드 서버 이기 때문에 config.yml 에서 MySQL, SQLite 를 선택해서 쓸수있게 수정

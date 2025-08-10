@@ -15,7 +15,7 @@ enum class SkillType {
     GATHERING
 }
 
-class SkillManager(private val plugin: LightMmo, private val maxLevel: Int, private val rewardConfig: FileConfiguration) {
+class SkillManager(val plugin: LightMmo, private val maxLevel: Int, private val rewardConfig: FileConfiguration) {
 
     fun addExp(player: Player, skill: SkillType, amount: Int) {
         val uuid = player.uniqueId.toString()

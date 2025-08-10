@@ -37,12 +37,14 @@ exp_gain:
       CACTUS: 5
       BAMBOO: 5
       COCOA_BEANS: 7
+      addcrop:addcrop_bean_stage5: 15
     # 씨앗을 심었을 때 얻는 경험치입니다.
     plant_seed:
       WHEAT_SEEDS: 2
       CARROT: 2
       POTATO: 2
       BEETROOT_SEEDS: 2
+      addcrop:addcrop_bean_seed: 5
     # 밭을 갈았을 때 얻는 경험치입니다.
     till_land: 3
     # 동물을 번식시켰을 때 얻는 경험치입니다.

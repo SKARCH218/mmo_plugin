@@ -162,7 +162,7 @@ class LightMmo : JavaPlugin() {
         server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.FishingListener(this, expConfig), this)
         server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.HuntingListener(this, expConfig), this)
         server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.GatheringListener(this, expConfig), this)
-        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.FarmingListener(this, expConfig), this)
+        server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.FarmingListener(skillManager), this)
         server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.PlayerConnectionListener(this), this)
         server.pluginManager.registerEvents(lightstudio.mmo_plugin.listeners.SkillGuiListener(this), this)
     }
@@ -172,6 +172,17 @@ class LightMmo : JavaPlugin() {
         getCommand("mmo")?.tabCompleter = lightstudio.mmo_plugin.commands.MmoCommand(this)
         getCommand("mmoadmin")?.setExecutor(lightstudio.mmo_plugin.commands.MmoAdminCommand(this))
         getCommand("mmoadmin")?.tabCompleter = lightstudio.mmo_plugin.commands.MmoAdminCommand(this)
+    }
+
+    fun isPluginEnabledInWorld(worldName: String): Boolean {
+        return config.getStringList("enabled-worlds").contains(worldName)
+    }
+
+    fun getExpForFarming(action: String, key: String): Int {
+        if (key.isEmpty()) {
+            return expConfig.getInt("exp_gain.farming.$action", 0)
+        }
+        return expConfig.getInt("exp_gain.farming.$action.$key", 0)
     }
 
     private fun loadLanguageConfig() {

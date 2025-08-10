@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "lightstudio"
-version = "1.0-SNAPSHOT"
+version = "2.0"
 
 repositories {
     mavenCentral()
@@ -26,6 +26,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.xerial:sqlite-jdbc:3.45.1.0")
+    implementation("mysql:mysql-connector-java:8.0.33")
     implementation("net.objecthunter:exp4j:0.4.8")
     compileOnly("me.clip:placeholderapi:2.11.5")
     implementation("com.google.guava:guava:33.0.0-jre")
